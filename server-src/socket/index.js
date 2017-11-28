@@ -7,7 +7,7 @@ module.exports = function(io, userID, db) {
     // set input
     socket.userID = userID;
     // handle events
-    require('./gamedata.socket.js')(socket, db);
+    //require('./gamedata.socket.js')(socket, db);
 
   });
   return io;
