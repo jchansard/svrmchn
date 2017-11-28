@@ -1,5 +1,7 @@
 <div class="form-group">
   <ul>
-    <li *ngFor="let message of messages">{{message}}</li>
+    <li *ngFor="let room of rooms">{{room}}</li>
   </ul>
 </div>
+
+<button (click)="createRoom()">Create Room</button>

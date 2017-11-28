@@ -5,7 +5,8 @@
   "scripts": {
     "ng": "ng",
     "start": "webpack-dev-server --port=4200",
-    "build": "webpack && cp -R server-src/* dist/",
+    "build": "webpack && npm run build-srv",
+    "build-srv": "cp -R server-src/* dist/",
     "serve": "cd dist && node server.js",
     "test": "karma start ./karma.conf.js",
     "lint": "ng lint",

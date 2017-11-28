@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RoomService } from '../shared';
 
 @Component({
   selector: 'mndl-chat',
@@ -6,11 +7,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  messages = ["test","another test"];
+  rooms = [];
+  roomService: RoomService;
 
-  constructor() { }
+  constructor(roomService:RoomService) {
+    this.roomService = roomService;
+  }
 
   ngOnInit() {
+  }
+
+  private createRoom():void {
+    this.roomService.createRoom((roomID) => this.rooms.push(roomID));
   }
 
 }

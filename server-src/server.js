@@ -31,6 +31,8 @@ let server = http.createServer(app);
 
 // init socket
 let io = require('socket.io').listen(server);
+ioInit(io);
+
 //let user = ["glasg0wn3d", "OXBOW", "online_playing", "LEFT4SCRAPS"][Math.floor(Math.random()*4)] // todo: obviously
 //db.users.get(user).subscribe((id) => ioInit(io, id, db));
 //let io = require('socket.io')(http); io.on('connection', (socket) => { console.log('user connected'); socket.on('disconnect', function(){ console.log('user disconnected'); }); socket.on('add-message', (message) => { io.emit('message', {type:'new-message', text: message}); }); });
