@@ -1,0 +1,138 @@
+[
+  {
+    "id": 1,
+    "name": "bear",
+    "abilities": [1],
+    "animations": [
+      {
+        "name": "idle",
+        "beginFrame":  1,
+        "endFrame": 1
+      },
+      {
+        "name": "walk",
+        "beginFrame": 1,
+        "endFrame": 4
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "weakman",
+    "abilities": [1],
+    "animations": [
+      {
+        "name": "idle",
+        "beginFrame":  1,
+        "endFrame": 1
+      },
+      {
+        "name": "walk",
+        "beginFrame": 1,
+        "endFrame": 4
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "man",
+    "abilities": [1],
+    "animations": [
+      {
+        "name": "idle",
+        "beginFrame":  1,
+        "endFrame": 1
+      },
+      {
+        "name": "walk",
+        "beginFrame": 1,
+        "endFrame": 4
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "strongman",
+    "abilities": [1],
+    "animations": [
+      {
+        "name": "idle",
+        "beginFrame":  1,
+        "endFrame": 1
+      },
+      {
+        "name": "walk",
+        "beginFrame": 1,
+        "endFrame": 4
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "tiger",
+    "abilities": [1],
+    "animations": [
+      {
+        "name": "idle",
+        "beginFrame":  1,
+        "endFrame": 1
+      },
+      {
+        "name": "walk",
+        "beginFrame": 1,
+        "endFrame": 4
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "bwolf",
+    "abilities": [1],
+    "animations": [
+      {
+        "name": "idle",
+        "beginFrame":  1,
+        "endFrame": 1
+      },
+      {
+        "name": "walk",
+        "beginFrame": 1,
+        "endFrame": 4
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "gwolf",
+    "abilities": [1],
+    "animations": [
+      {
+        "name": "idle",
+        "beginFrame":  1,
+        "endFrame": 1
+      },
+      {
+        "name": "walk",
+        "beginFrame": 1,
+        "endFrame": 4
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "dragon",
+    "abilities": [1],
+    "animations": [
+      {
+        "name": "idle",
+        "beginFrame":  1,
+        "endFrame": 1
+      },
+      {
+        "name": "walk",
+        "beginFrame": 1,
+        "endFrame": 2
+      }
+    ]
+  }
+]
