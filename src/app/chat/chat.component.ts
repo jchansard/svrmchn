@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { RoomService } from '../shared';
+import { GameSessionService } from '../game/game-session.service';
 
 @Component({
   selector: 'mndl-chat',
@@ -8,17 +10,27 @@ import { RoomService } from '../shared';
 })
 export class ChatComponent implements OnInit {
   rooms = [];
-  roomService: RoomService;
 
-  constructor(roomService:RoomService) {
-    this.roomService = roomService;
+  constructor(private roomService:RoomService, private router: Router, private gameSession: GameSessionService ) {
+
   }
 
   ngOnInit() {
+    this.roomService.onRoomListUpdate((rooms) => this.updateRoomList(rooms));
+    this.roomService.getRooms();
   }
 
   private createRoom():void {
-    this.roomService.createRoom((roomID) => this.rooms.push(roomID));
+    this.roomService.createRoom();
+  }
+
+  private joinRoom(roomNumber:number):void {
+    this.gameSession.roomID = "" + roomNumber;
+    this.router.navigate(['/game']);
+  }
+
+  private updateRoomList(rooms:string[]) {
+    this.rooms = rooms;
   }
 
 }

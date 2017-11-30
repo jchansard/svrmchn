@@ -5,31 +5,41 @@ import { SocketService } from './socket.service';
 import * as SocketIO from 'socket.io-client';
 import 'rxjs/add/operator/first';
 
-type TCreateRoomCallback = (roomID: string) => void;
+type TRoomListUpdateCallback = (roomID: string[]) => void;
 
 @Injectable()
 export class RoomService {
   private socket:SocketIO.Socket;
-  private roomListUpdateStream:Observable<string>;
+  private roomListUpdate$:Observable<string[]>;
 
   constructor(private socketService: SocketService) {
+    this.socket = socketService;
     this.init();
   }
 
   private init():void {
-    this.socket = this.socketService.getSocket();
+    console.log("initialized");
     this.initListeners();
   }
 
-  private initListeners():void {
-    this.roomListUpdateStream = new Observable((stream:Subscriber<string>) => {
-      this.socket.on("roomCreated",(roomID:string) => stream.next(roomID));
-    })
+  private ngOnDestroy() {
+    this.socket.unsubscribe("roomListUpdate");
   }
 
-  public createRoom(callback: TCreateRoomCallback|null):void {
+  private initListeners():void {
+    this.roomListUpdate$ = this.socket.fromEvent("roomListUpdate");
+  }
+
+  public getRooms():void {
+    this.socket.emit("getRooms")
+  }
+
+  public createRoom():void {
     this.socket.emit("createRoom");
-    this.roomListUpdateStream.first().subscribe(callback);
+  }
+
+  public onRoomListUpdate(callback:TRoomListUpdateCallback|null):void {
+    this.roomListUpdate$.subscribe(callback);
   }
 
 }
