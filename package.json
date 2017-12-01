@@ -4,9 +4,12 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "webpack-dev-server --port=4200",
+    "start": "webpack-dev-server --port=3000",
     "build": "webpack && npm run build-srv",
     "build-srv": "cp -R server-src/* dist/",
+    "build-shared": "npm run copy-shared-client && npm run copy-shared-server",
+    "copy-shared-client": "rm -rf src/app/common/* && cd common-src && find . -name '*.ts' | cpio -pmdv ../src/app",
+    "copy-shared-server": "rm -rf server-src/common/* && cd common-src && tsc",
     "serve": "cd dist && node server.js",
     "test": "karma start ./karma.conf.js",
     "lint": "ng lint",

@@ -1,6 +1,6 @@
 <div class="form-group">
   <ul>
-    <li *ngFor="let room of rooms; let roomNumber = index">Room {{room}} <button (click)="joinRoom(roomNumber)" href="#">Join</button></li>
+    <li *ngFor="let room of roomListUpdate$ | async; let roomNumber = index">Room {{room}} <button (click)="joinRoom(roomNumber)" href="#">Join</button></li>
   </ul>
 </div>
 

@@ -10,7 +10,7 @@ type TRoomListUpdateCallback = (roomID: string[]) => void;
 @Injectable()
 export class RoomService {
   private socket:SocketIO.Socket;
-  private roomListUpdate$:Observable<string[]>;
+  public roomListUpdate$:Observable<string[]>;
 
   constructor(private socketService: SocketService) {
     this.socket = socketService;
