@@ -1,5 +1,8 @@
-export class RoomListEvents {
-  public get createRoom():string { return '>:create-room'; }
-  public get getRooms():string { return '>:get-rooms'; }
-  public get roomListUpdate():string { return '<:roomListUpdate'}
+import { Events } from './events';
+
+export class RoomListEvents extends Events {
+  public NAMESPACE:string = '/room-list';
+  public createRoom:string = '>:create-room';
+  public getRooms:string = '>:get-rooms';
+  public roomListUpdate:string = '<:roomListUpdate';
 }

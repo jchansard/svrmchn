@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subscriber } from 'rxjs/Subscriber';
 import { SocketService } from './socket.service';
+import { Socket } from './socket';
 import * as SocketIO from 'socket.io-client';
 import 'rxjs/add/operator/first';
 
@@ -12,12 +13,12 @@ type TRoomListUpdateCallback = (roomIDs: IRoomInfo[]) => void;
 
 @Injectable()
 export class RoomService {
-  private socket:SocketIO.Socket;
+  private socket:Socket;
   private events:RoomListEvents = new RoomListEvents();
   public roomListUpdate$:Observable<IRoomInfo[]>;
 
   constructor(private socketService: SocketService) {
-    this.socket = socketService;
+    this.socket = socketService.of(this.events.NAMESPACE);
     this.init();
   }
 
@@ -27,7 +28,7 @@ export class RoomService {
   }
 
   private ngOnDestroy() {
-    this.socket.unsubscribe();
+    this.socket.unsubscribe(this.events.allEvents);
   }
 
   public getRooms():void {

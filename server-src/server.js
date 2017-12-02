@@ -1,8 +1,8 @@
-const express  = require('express');
-const http     = require('http');
-const path     = require('path');
-const ioInit   = require('./socket');
-const Database = require('./db/db');
+const express           = require('express');
+const http              = require('http');
+const path              = require('path');
+const initializeSockets = require('./socket');
+const Database          = require('./db/db');
 
 const root = '';
 const port = process.env.PORT || '3000';
@@ -30,8 +30,7 @@ let server = http.createServer(app);
 //let db = new Database();
 
 // init socket
-let io = require('socket.io').listen(server);
-ioInit(io);
+initializeSockets(server);
 
 //db.users.get(user).subscribe((id) => ioInit(io, id, db));
 //let io = require('socket.io')(http); io.on('connection', (socket) => { console.log('user connected'); socket.on('disconnect', function(){ console.log('user disconnected'); }); socket.on('add-message', (message) => { io.emit('message', {type:'new-message', text: message}); }); });

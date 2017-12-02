@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject }    from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 
-import { SocketService } from '../shared';
+import { SocketService, Socket } from '../shared';
 import { ChatEvents } from '../common/events/chat.events';
 import { IChatMessage } from '../common/json/json.IChatMessage';
 
@@ -11,18 +11,21 @@ import { IChatMessage } from '../common/json/json.IChatMessage';
 export class ChatService {
   private events:ChatEvents = new ChatEvents();
   private messages:IChatMessage[] = [];
+  private socket:Socket;
 
   private receivedMessage$:Observable<IChatMessage>;
   private sentOrReceivedMessage$:Subject<IChatMessage>;
   public allMessages$:Observable<IChatMessage[]>;
 
 
-  constructor(private socket:SocketService) {
+  constructor(private socketService:SocketService) {
     this.init();
   }
 
   private init() {
     console.log("initialized chat service");
+    this.socket = this.socketService.of(this.events.NAMESPACE);
+    
     this.receivedMessage$ = this.socket.fromEvent(this.events.receiveMessage);
     this.sentOrReceivedMessage$ = new Subject();
     this.receivedMessage$.subscribe(this.sentOrReceivedMessage$);

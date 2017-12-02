@@ -1,19 +1,24 @@
-const RoomListEvents = require('../common/events/room-list.events').RoomListEvents;
+const roomListEvents = new require('../common/events/room-list.events').RoomListEvents();
 
 // sets up the passed socket to respond to room requests
-module.exports = (io, socket) => {
+module.exports = (io) => {
 
-  let roomListEvents = new RoomListEvents();
+  let roomListNamespace = io.of(roomListEvents.NAMESPACE);
   let rooms = []; // todo: class when needed
 
-  socket.on(roomListEvents.createRoom, () => { // todo: share events
-    console.log("creating new room: " + rooms.length);
+  roomListNamespace.on('connection', (socket) => {
+    console.log("connected to room list");
+    socket.on('disconnect', () => console.log('disconnected from room list'));
 
-    rooms.push({id: `${socket.userID}'s room`})
-    io.to(socket.id).emit(roomListEvents.roomListUpdate, rooms);
-  });
+    socket.on(roomListEvents.createRoom, () => {
+      console.log("creating new room: " + rooms.length);
 
-  socket.on(roomListEvents.getRooms, () => {
-    io.to(socket.id).emit(roomListEvents.roomListUpdate, rooms)
-  });
+      rooms.push({id: `${socket.userID}'s room`})
+      roomListNamespace.to(socket.id).emit(roomListEvents.roomListUpdate, rooms);
+    });
+
+    socket.on(roomListEvents.getRooms, () => {
+      roomListNamespace.to(socket.id).emit(roomListEvents.roomListUpdate, rooms)
+    });
+  })
 }

@@ -1,47 +1,23 @@
 import { Injectable } from '@angular/core';
 import * as SocketIO from 'socket.io-client';
-import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
+
+import { Socket } from './socket';
 
 @Injectable()
 export class SocketService {
   private url = 'http://localhost:3000';
-  private socket: SocketIO.Socket;
+  private rootSocket: SocketIO.Socket;
 
   constructor() {
     this.init();
   }
 
   private init():void {
-    this.socket = SocketIO();
+    this.rootSocket = SocketIO();
   }
 
-  public emit(eventName:string, data:any) {
-    this.socket.emit(eventName, data);
+  public of(nameSpace:string):SocketIO.Socket {
+    return new Socket(nameSpace);
   }
-
-  // todo: take an events object and unsubscribe from everything
-  public unsubscribe(events:string|string[]) {
-    if (typeof events === 'string') {
-      this.socket.removeListeners(events);
-    }
-    else {
-      events.forEach((event:string) => this.socket.removeListeners(event));
-    }
-  }
-
-  public fromEvent<T>(eventName:string):Observable<T> {
-    return Observable.create((observer:Subscriber<T>) => this.socket.on(eventName, (data:T) => observer.next(data)));
-  }
-
-  public fromEventOnce<T>(eventName:string):Observable<T> {
-    return Observable.create((observer:Subscriber<T>) => {
-      this.socket.once(eventName, (data:T) => observer.next(data));
-      observer.complete();
-    })
-  }
-
-  // todo: move this to a login session service
-  public get userName():string { return this.socket.userID; }
 
 }
