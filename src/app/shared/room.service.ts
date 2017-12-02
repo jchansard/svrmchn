@@ -5,12 +5,16 @@ import { SocketService } from './socket.service';
 import * as SocketIO from 'socket.io-client';
 import 'rxjs/add/operator/first';
 
-type TRoomListUpdateCallback = (roomID: string[]) => void;
+import { RoomListEvents } from '../common/events/room-list-events';
+import { IRoomInfo } from '../common/json/json.IRoomInfo';
+
+type TRoomListUpdateCallback = (roomIDs: IRoomInfo[]) => void;
 
 @Injectable()
 export class RoomService {
   private socket:SocketIO.Socket;
-  public roomListUpdate$:Observable<string[]>;
+  private events:RoomListEvents;
+  public roomListUpdate$:Observable<IRoomInfo[]>;
 
   constructor(private socketService: SocketService) {
     this.socket = socketService;
@@ -19,25 +23,27 @@ export class RoomService {
 
   private init():void {
     console.log("initialized");
+    this.events = new RoomListEvents();
     this.initListeners();
   }
 
   private ngOnDestroy() {
-    this.socket.unsubscribe("roomListUpdate");
+    this.socket.unsubscribe();
   }
 
   private initListeners():void {
-    this.roomListUpdate$ = this.socket.fromEvent("roomListUpdate");
+    this.roomListUpdate$ = this.socket.fromEvent(this.events.roomListUpdate);
   }
 
   public getRooms():void {
-    this.socket.emit("getRooms")
+    this.socket.emit(this.events.getRooms)
   }
 
   public createRoom():void {
-    this.socket.emit("createRoom");
+    this.socket.emit(this.events.createRoom);
   }
 
+  // todo: currently unused
   public onRoomListUpdate(callback:TRoomListUpdateCallback|null):void {
     this.roomListUpdate$.subscribe(callback);
   }

@@ -1,17 +1,20 @@
+const RoomListEvents = require('../common/events/room-list-events').RoomListEvents;
+
 // sets up the passed socket to respond to room requests
 module.exports = (io, socket) => {
 
+  let roomListEvents = new RoomListEvents();
   let rooms = [];
 
-  socket.on("createRoom", () => { // todo: share events
+  socket.on(roomListEvents.createRoom, () => { // todo: share events
     let roomNumber = rooms.length;
     console.log("creating new room: " + roomNumber);
 
-    rooms.push(roomNumber)
-    io.to(socket.id).emit("roomListUpdate", rooms);
+    rooms.push({id:roomNumber})
+    io.to(socket.id).emit(roomListEvents.roomListUpdate, rooms);
   });
 
-  socket.on("getRooms", () => {
-    io.to(socket.id).emit("roomListUpdate", rooms)
+  socket.on(roomListEvents.getRooms, () => {
+    io.to(socket.id).emit(roomListEvents.roomListUpdate, rooms)
   });
 }

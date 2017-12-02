@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+
 import { RoomService } from '../shared';
 import { GameSessionService } from '../game/game-session.service';
-import { Observable } from 'rxjs/Observable';
+import { IRoomInfo } from '../common/json/json.IRoomInfo';
 
 @Component({
   selector: 'mndl-chat',
@@ -10,7 +12,7 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  roomListUpdate$: Observable<string[]>
+  roomListUpdate$: Observable<IRoomInfo[]>
   rooms = [];
 
   constructor(private roomService:RoomService, private router: Router, private gameSession: GameSessionService ) {
@@ -26,8 +28,8 @@ export class ChatComponent implements OnInit {
     this.roomService.createRoom();
   }
 
-  private joinRoom(roomNumber:number):void {
-    this.gameSession.roomID = "" + roomNumber;
+  private joinRoom(roomInfo:IRoomInfo):void {
+    this.gameSession.roomID = roomInfo.id;
     this.router.navigate(['/game']);
   }
 
