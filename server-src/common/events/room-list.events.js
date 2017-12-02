@@ -21,4 +21,4 @@ var RoomListEvents = (function () {
     return RoomListEvents;
 }());
 exports.RoomListEvents = RoomListEvents;
-//# sourceMappingURL=room-list-events.js.map
+//# sourceMappingURL=room-list.events.js.map

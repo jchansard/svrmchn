@@ -3,8 +3,10 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
 import { RoomService } from '../shared';
+import { ChatService } from './chat.service';
 import { GameSessionService } from '../game/game-session.service';
 import { IRoomInfo } from '../common/json/json.IRoomInfo';
+import { IChatMessage } from '../common/json/json.IChatMessage';
 
 @Component({
   selector: 'mndl-chat',
@@ -12,16 +14,24 @@ import { IRoomInfo } from '../common/json/json.IRoomInfo';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
+  // todo: move to room...?
   roomListUpdate$: Observable<IRoomInfo[]>
-  rooms = [];
+  allMessages$: Observable<IChatMessage[]>
 
-  constructor(private roomService:RoomService, private router: Router, private gameSession: GameSessionService ) {
+  rooms = [];
+  messages = [];
+
+  constructor(private roomService:RoomService, private chatService: ChatService, private gameSession: GameSessionService,  private router: Router) {
 
   }
 
   ngOnInit() {
     this.roomListUpdate$ = this.roomService.roomListUpdate$;
     this.roomService.getRooms();
+  }
+
+  private sendChatMessage(message) {
+    this.chatService.sendMessage(message);
   }
 
   private createRoom():void {

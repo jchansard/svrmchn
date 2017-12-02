@@ -1,7 +1,19 @@
+
+<!-- TODO: this should be a room list component-->
 <div class="form-group">
   <ul>
     <li *ngFor="let room of roomListUpdate$ | async">Room {{room.id}} <button (click)="joinRoom(room)" href="#">Join</button></li>
   </ul>
+</div>
+
+
+<div class="form-group">
+  <div class="chat-area">
+    <ul class="messages">
+      <li *ngFor="let message of chatService.allMessages$ | async">{{ message.sender }}: {{ message.text }}</li>
+    </ul>
+  </div>
+  <input #chatInput class="chat-input" placeholder="Type here to chat..." (keyup.enter)="sendChatMessage(chatInput.value); chatInput.value = ''"/>
 </div>
 
 <button (click)="createRoom()">Create Room</button>

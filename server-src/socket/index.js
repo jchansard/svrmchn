@@ -3,12 +3,10 @@ module.exports = function(io) {
     // connect and disconnect
     console.log('user connected');
     socket.on('disconnect', () => console.log('user disconnected'));
+    socket.userID = ["glasg0wn3d", "OXBOW", "online_playing", "LEFT4SCRAPS"][Math.floor(Math.random()*4)]; //todo: obviously
 
     require('./rooms.socket.js')(io, socket);
-    // set input
-    //socket.userID = userID;
-    // handle events
-    //require('./gamedata.socket.js')(socket, db);
+    require('./chat.socket.js')(io, socket);
 
   });
   return io;

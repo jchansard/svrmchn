@@ -5,7 +5,7 @@ import { SocketService } from './socket.service';
 import * as SocketIO from 'socket.io-client';
 import 'rxjs/add/operator/first';
 
-import { RoomListEvents } from '../common/events/room-list-events';
+import { RoomListEvents } from '../common/events/room-list.events';
 import { IRoomInfo } from '../common/json/json.IRoomInfo';
 
 type TRoomListUpdateCallback = (roomIDs: IRoomInfo[]) => void;
@@ -13,7 +13,7 @@ type TRoomListUpdateCallback = (roomIDs: IRoomInfo[]) => void;
 @Injectable()
 export class RoomService {
   private socket:SocketIO.Socket;
-  private events:RoomListEvents;
+  private events:RoomListEvents = new RoomListEvents();
   public roomListUpdate$:Observable<IRoomInfo[]>;
 
   constructor(private socketService: SocketService) {
@@ -22,17 +22,12 @@ export class RoomService {
   }
 
   private init():void {
-    console.log("initialized");
-    this.events = new RoomListEvents();
-    this.initListeners();
+    console.log("initialized room service");
+    this.roomListUpdate$ = this.socket.fromEvent(this.events.roomListUpdate);
   }
 
   private ngOnDestroy() {
     this.socket.unsubscribe();
-  }
-
-  private initListeners():void {
-    this.roomListUpdate$ = this.socket.fromEvent(this.events.roomListUpdate);
   }
 
   public getRooms():void {

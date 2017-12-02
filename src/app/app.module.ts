@@ -9,6 +9,7 @@ import { MndlGaemComponent }          from './game/mndl-gaem/mndl-gaem.component
 
 /* services */
 import { SocketService, RoomService } from './shared';
+import { ChatService }                from './chat/chat.service';
 import { GameSessionService }         from './game/game-session.service';
 
 const appRoutes: Routes = [
@@ -30,7 +31,7 @@ const appRoutes: Routes = [
       { enableTracing: true }
     )
   ],
-  providers: [SocketService, RoomService, GameSessionService],
+  providers: [SocketService, RoomService, GameSessionService, ChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

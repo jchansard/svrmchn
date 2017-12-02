@@ -16,10 +16,11 @@ export class SocketService {
     this.socket = SocketIO();
   }
 
-  public emit(eventName:string) {
-    this.socket.emit(eventName);
+  public emit(eventName:string, data:any) {
+    this.socket.emit(eventName, data);
   }
 
+  // todo: take an events object and unsubscribe from everything
   public unsubscribe(events:string|string[]) {
     if (typeof events === 'string') {
       this.socket.removeListeners(events);
@@ -39,5 +40,8 @@ export class SocketService {
       observer.complete();
     })
   }
+
+  // todo: move this to a login session service
+  public get userName():string { return this.socket.userID; }
 
 }
