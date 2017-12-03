@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GameSessionService } from '../game-session.service';
+import { RoomService } from '../../shared/';
 
 @Component({
   selector: 'app-mndl-gaem',
@@ -8,7 +8,7 @@ import { GameSessionService } from '../game-session.service';
 })
 export class MndlGaemComponent implements OnInit {
 
-  constructor(private gameSession: GameSessionService) { }
+  constructor(private roomService: RoomService) { }
 
   ngOnInit() {
   }

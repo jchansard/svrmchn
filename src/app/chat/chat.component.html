@@ -2,7 +2,7 @@
 <!-- TODO: this should be a room list component-->
 <div class="form-group">
   <ul>
-    <li *ngFor="let room of roomListUpdate$ | async">Room {{room.id}} <button (click)="joinRoom(room)" href="#">Join</button></li>
+    <li *ngFor="let room of chatService.roomListUpdate$ | async">Room {{room.id}} <button (click)="joinRoom(room)" href="#">Join</button></li>
   </ul>
 </div>
 

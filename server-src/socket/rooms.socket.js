@@ -1,24 +1,42 @@
-const roomListEvents = new require('../common/events/room-list.events').RoomListEvents();
+const events = new require('../common/events/room-list.events').RoomListEvents();
 
 // sets up the passed socket to respond to room requests
-module.exports = (io) => {
+module.exports = (namespace, socket, userID) => {
 
-  let roomListNamespace = io.of(roomListEvents.NAMESPACE);
   let rooms = []; // todo: class when needed
 
-  roomListNamespace.on('connection', (socket) => {
-    console.log("connected to room list");
-    socket.on('disconnect', () => console.log('disconnected from room list'));
+  socket.on(events.createRoom, () => {
+    let roomName = `${userID}'s room'`;
+    if (!roomExists(rooms, roomName)) {
+      console.log("creating new room: " + roomName);
 
-    socket.on(roomListEvents.createRoom, () => {
-      console.log("creating new room: " + rooms.length);
+      rooms.push({id: roomName})
+      namespace.to(socket.id).emit(events.roomListUpdate, rooms);
 
-      rooms.push({id: `${socket.userID}'s room`})
-      roomListNamespace.to(socket.id).emit(roomListEvents.roomListUpdate, rooms);
-    });
+      // join room also
+      socket.join(roomName);
+      namespace.to(socket.id).emit(events.joinRoom, roomName)
+    }
+  });
 
-    socket.on(roomListEvents.getRooms, () => {
-      roomListNamespace.to(socket.id).emit(roomListEvents.roomListUpdate, rooms)
-    });
-  })
+  socket.on(events.getRooms, () => {
+    namespace.to(socket.id).emit(events.roomListUpdate, rooms)
+  });
+
+  // join room event
+  // todo: figure out how i want to modularize
+  socket.on(events.joinRoom, (room) => {
+    console.log(`${userID} joining room ${room} [socketID: ${socket.id}]`);
+    socket.join(room);
+    namespace.to(socket.id).emit(events.roomChange, {id: room});
+  });
+
+  socket.on(events.leaveRoom, (room) => {
+    console.log(`${userID} leaving room ${room}`);
+    socket.leave(room);
+  });
+}
+
+let roomExists = function(rooms, roomName) {
+  return (rooms.find((room) => (room.id === roomName)) !== undefined);
 }

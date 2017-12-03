@@ -15,10 +15,13 @@ var RoomListEvents = (function (_super) {
     __extends(RoomListEvents, _super);
     function RoomListEvents() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.NAMESPACE = '/room-list';
+        _this.NAMESPACE = '/chat';
         _this.createRoom = '>:create-room';
+        _this.joinRoom = ">:join-room";
+        _this.leaveRoom = ">:leave-room";
         _this.getRooms = '>:get-rooms';
         _this.roomListUpdate = '<:roomListUpdate';
+        _this.roomChange = "<:roomChange";
         return _this;
     }
     return RoomListEvents;

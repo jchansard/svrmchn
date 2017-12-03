@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 
-import { RoomService } from '../shared';
 import { ChatService } from './chat.service';
 import { GameSessionService } from '../game/game-session.service';
 import { IRoomInfo } from '../common/json/json.IRoomInfo';
@@ -14,20 +13,19 @@ import { IChatMessage } from '../common/json/json.IChatMessage';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  // todo: move to room...?
+  // todo: move to room component...?
   roomListUpdate$: Observable<IRoomInfo[]>
   allMessages$: Observable<IChatMessage[]>
 
   rooms = [];
   messages = [];
 
-  constructor(private roomService:RoomService, private chatService: ChatService, private gameSession: GameSessionService,  private router: Router) {
-
+  constructor(private chatService: ChatService, private gameSession: GameSessionService,  private router: Router) {
   }
 
   ngOnInit() {
-    this.roomListUpdate$ = this.roomService.roomListUpdate$;
-    this.roomService.getRooms();
+    //this.roomService.roomChange$.subscribe(this.joinRoom.bind(this)); global breaks this...
+    this.chatService.getRooms();
   }
 
   private sendChatMessage(message) {
@@ -35,11 +33,13 @@ export class ChatComponent implements OnInit {
   }
 
   private createRoom():void {
-    this.roomService.createRoom();
+    this.chatService.createRoom();
   }
 
   private joinRoom(roomInfo:IRoomInfo):void {
-    this.gameSession.roomID = roomInfo.id;
+    // todo: reuse room service...
+    //this.gameSession.roomID = roomInfo.id;
+    this.chatService.joinRoom(roomInfo.id);
     this.router.navigate(['/game']);
   }
 
