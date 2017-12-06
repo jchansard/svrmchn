@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RoomService } from '../../shared/';
+import { SessionInfoService } from '../../shared';
 
 @Component({
   selector: 'app-mndl-gaem',
@@ -8,7 +8,7 @@ import { RoomService } from '../../shared/';
 })
 export class MndlGaemComponent implements OnInit {
 
-  constructor(private roomService: RoomService) { }
+  constructor(private sessionInfo:SessionInfoService) { }
 
   ngOnInit() {
   }

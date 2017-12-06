@@ -6,10 +6,10 @@ import { Socket } from './socket';
 import { RoomListEvents } from '../common/events/room-list.events';
 import { IRoomInfo } from '../common/json/json.IRoomInfo';
 
-export class RoomList {
+export class NamespaceRoomList {
   private events:RoomListEvents = new RoomListEvents();
 
-  public room:string;
+  public currentRoom:string;
   public roomListUpdate$:Observable<IRoomInfo[]>;
   public roomChange$:Observable<IRoomInfo>;
 
@@ -22,11 +22,11 @@ export class RoomList {
     this.roomChange$ = this.socket.fromEvent(this.events.roomChange);
 
     this.roomChange$.subscribe((newRoom) => {
-      this.room = newRoom.id;
+      this.currentRoom = newRoom.id;
     });
   }
 
-  private ngOnDestroy() {
+  public unsubscribeAll() {
     this.socket.unsubscribe(this.events.allEvents);
   }
 
@@ -40,7 +40,7 @@ export class RoomList {
 
   public joinRoom(room:string):void {
     // todo: probably don't want to always leave
-    if (!this.room === undefined) {
+    if (!this.currentRoom === undefined) {
       this.socket.emit(this.events.leaveRoom, room);
     }
     this.socket.emit(this.events.joinRoom, room);

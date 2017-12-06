@@ -8,21 +8,22 @@ import { ChatComponent }              from './chat/chat.component';
 import { MndlGaemComponent }          from './game/mndl-gaem/mndl-gaem.component';
 
 /* services */
-import { SocketService, RoomService } from './shared';
+import { SocketService, NamespaceRoomListService, SessionInfoService } from './shared';
 import { ChatService }                from './chat/chat.service';
-import { GameSessionService }         from './game/game-session.service';
+import { RoomListComponent }          from './chat/room-list.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/rooms', pathMatch: 'full' },
   { path: 'game', component: MndlGaemComponent },
-  { path: 'rooms', component: ChatComponent }
+  { path: 'rooms', component: RoomListComponent }
 ]
 
 @NgModule({
   declarations: [
     AppComponent,
     ChatComponent,
-    MndlGaemComponent
+    MndlGaemComponent,
+    RoomListComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +32,7 @@ const appRoutes: Routes = [
       { enableTracing: true }
     )
   ],
-  providers: [SocketService, RoomService, GameSessionService, ChatService],
+  providers: [SocketService, NamespaceRoomListService, SessionInfoService, ChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class GameSessionService {
-  public roomID: string;
-
+export class SessionInfoService {
+  public roomID:string;
+  
   constructor() { }
+
 }
