@@ -25,22 +25,25 @@ export class ChatComponent implements OnInit {
 
   ngOnInit() {
     //this.roomService.roomChange$.subscribe(this.joinRoom.bind(this)); global breaks this...
-    this.chatService.getRooms();
+    this.chatService.rooms.getRooms();
   }
 
-  private sendChatMessage(message) {
+  private sendChatMessage(message:string) {
     this.chatService.sendMessage(message);
   }
 
   private createRoom():void {
-    this.chatService.createRoom();
+    this.chatService.rooms.createRoom();
   }
 
   private joinRoom(roomInfo:IRoomInfo):void {
     // todo: reuse room service...
     //this.gameSession.roomID = roomInfo.id;
-    this.chatService.joinRoom(roomInfo.id);
+    this.chatService.rooms.joinRoom(roomInfo.id);
     this.router.navigate(['/game']);
   }
 
+  private isDifferentRoom(roomName:string) {
+    return (roomName !== this.chatService.rooms.room); // todo: icky
+  }
 }

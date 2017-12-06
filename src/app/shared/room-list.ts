@@ -22,7 +22,6 @@ export class RoomList {
     this.roomChange$ = this.socket.fromEvent(this.events.roomChange);
 
     this.roomChange$.subscribe((newRoom) => {
-      console.log("room change fired");
       this.room = newRoom.id;
     });
   }

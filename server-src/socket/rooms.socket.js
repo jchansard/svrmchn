@@ -1,26 +1,27 @@
 const events = new require('../common/events/room-list.events').RoomListEvents();
+const availableServices = require('../services/service-loader').availableServices;
 
 // sets up the passed socket to respond to room requests
-module.exports = (namespace, socket, userID) => {
+module.exports = (app, namespace, socket, userID) => {
 
-  let rooms = []; // todo: class when needed
+  let roomService = app.get('services').load(availableServices.roomList);
 
   socket.on(events.createRoom, () => {
-    let roomName = `${userID}'s room'`;
-    if (!roomExists(rooms, roomName)) {
-      console.log("creating new room: " + roomName);
+    let roomName = `${userID}'s room`;
+    if (!roomExists(roomService.rooms, roomName)) {
 
-      rooms.push({id: roomName})
-      namespace.to(socket.id).emit(events.roomListUpdate, rooms);
-
-      // join room also
-      socket.join(roomName);
-      namespace.to(socket.id).emit(events.joinRoom, roomName)
+      roomService.createRoom(roomName).subscribe((room) => {
+        console.log("creating new room: " + roomName);
+        namespace.to(socket.id).emit(events.roomListUpdate, roomService.rooms);
+        // join room also
+        socket.join(room.id);
+        namespace.to(socket.id).emit(events.joinRoom, room.id);
+      });
     }
   });
 
   socket.on(events.getRooms, () => {
-    namespace.to(socket.id).emit(events.roomListUpdate, rooms)
+    namespace.to(socket.id).emit(events.roomListUpdate, roomService.rooms)
   });
 
   // join room event

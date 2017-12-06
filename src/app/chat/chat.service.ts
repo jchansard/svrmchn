@@ -13,7 +13,7 @@ export class ChatService {
   private events:ChatEvents = new ChatEvents();
   private messages:IChatMessage[] = [];
   private socket:Socket;
-  private rooms:RoomList;
+  public rooms:RoomList;
 
   private receivedMessage$:Observable<IChatMessage>;
   private sentOrReceivedMessage$:Subject<IChatMessage>;
@@ -54,17 +54,5 @@ export class ChatService {
     this.socket.emit(this.events.sendMessage, message);
     // todo: update to use username
     this.sentOrReceivedMessage$.next(message);
-  }
-
-  public getRooms():void {
-    this.rooms.getRooms();
-  }
-
-  public createRoom():void {
-    this.rooms.createRoom();
-  }
-
-  public joinRoom(room:string):void {
-    this.rooms.joinRoom(room);
   }
 }
