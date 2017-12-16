@@ -7,7 +7,7 @@ export class Socket {
   private socket:SocketIO.Socket
 
   constructor(nameSpace:string) {
-    this.socket = SocketIO(nameSpace);
+    this.socket = SocketIO(`/${nameSpace}`);
   }
 
   public emit(eventName:string, data?:any) {

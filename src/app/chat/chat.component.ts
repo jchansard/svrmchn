@@ -20,7 +20,7 @@ export class ChatComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.chatService.rooms.getRooms();
+    this.chatService.getRooms(); //todo: this doesn't do anything with the new room list
   }
 
   private sendChatMessage(message:string) {
@@ -28,6 +28,6 @@ export class ChatComponent implements OnInit {
   }
 
   private isDifferentRoom(roomName:string) {
-    return (roomName !== this.chatService.rooms.currentRoom); // todo: icky
+    return (roomName !== this.chatService.currentRoom.id); // todo: icky
   }
 }

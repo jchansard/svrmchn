@@ -1,0 +1,7 @@
+<div class="form-group">
+  <ul>
+    <li *ngFor="let game of gameList$ | async">Room {{room.id}} <button (click)="joinGame(game)" href="#">Join</button></li>
+  </ul>
+  <button (click)="createGame()">Create Room</button>
+</div>
+<mndl-chat></mndl-chat>
