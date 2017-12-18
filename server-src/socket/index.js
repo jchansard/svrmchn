@@ -1,3 +1,4 @@
+const loginPlugin = require('./login.plugin.socket');
 const messageEmitterPlugin = require('./message-emitter.plugin.socket');
 const roomsPlugin = require('./rooms.plugin.socket');
 
@@ -12,6 +13,7 @@ module.exports = function(app, server) {
 
   // set up namespaces
   let userID = ["glasg0wn3d", "OXBOW", "online_playing", "LEFT4SCRAPS"][Math.floor(Math.random()*4)]; //todo: obviously
+  createNamespace(app, io, "login", [loginPlugin])
   createNamespace(app, io, "chat", [messageEmitterPlugin, roomsPlugin], userID);
   createNamespace(app, io, "game-browser", [roomsPlugin], userID);
 };

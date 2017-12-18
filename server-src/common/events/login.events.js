@@ -11,19 +11,16 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var events_1 = require("./events");
-var RoomListEvents = (function (_super) {
-    __extends(RoomListEvents, _super);
-    function RoomListEvents() {
+var LoginEvents = (function (_super) {
+    __extends(LoginEvents, _super);
+    function LoginEvents() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.createRoom = '>:create-room';
-        _this.joinRoom = ">:join-room";
-        _this.leaveRoom = ">:leave-room";
-        _this.getRooms = '>:get-rooms';
-        _this.roomListUpdate = '<:roomListUpdate';
-        _this.roomChange = "<:roomChange";
+        _this.login = '>:login';
+        _this.logout = ">:logout";
+        _this.loggedIn = "<:logged-in";
         return _this;
     }
-    return RoomListEvents;
+    return LoginEvents;
 }(events_1.Events));
-exports.RoomListEvents = RoomListEvents;
-//# sourceMappingURL=room-list.events.js.map
+exports.LoginEvents = LoginEvents;
+//# sourceMappingURL=login.events.js.map

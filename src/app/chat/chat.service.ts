@@ -3,7 +3,7 @@ import { Observable }     from 'rxjs/Observable';
 import { Subject }        from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 
-import { SocketService, Socket, NamespaceRoomList, NamespaceRoomListService} from '../shared';
+import { SocketService, Socket } from '../shared';
 import { ChatEvents }     from '../common/events/chat.events';
 import { RoomListEvents}  from '../common/events/room-list.events';
 import { IRoomInfo }      from '../common/json/json.IRoomInfo';
@@ -14,7 +14,7 @@ const NAMESPACE = "chat";
 
 @Injectable()
 export class ChatService {
-  public rooms:NamespaceRoomList;
+  //public rooms:NamespaceRoomList;
   public allMessages$:Observable<IChatMessage[]>;
   public currentRoom:IRoomInfo;
 
@@ -27,9 +27,9 @@ export class ChatService {
   private receivedMessage$:Observable<IChatMessage>;
   private sentOrReceivedMessage$:Subject<IChatMessage>;
 
-  public get roomListUpdate$():Observable<IRoomInfo[]> {
-    return this.rooms.roomListUpdate$;
-  }
+  /*public get roomListUpdate$():Observable<IRoomInfo[]> {
+  //  return this.rooms.roomListUpdate$;
+}*/
 
   constructor(private socketService:SocketService) {
     this.init();

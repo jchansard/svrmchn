@@ -1,0 +1,5 @@
+<ul *ngIf="!loginService.isLoggedIn">
+  <li *ngFor="let user of users"><button (click)="login(user)">log in as {{user}}</button></li>
+</ul>
+<button *ngIf="loginService.isLoggedIn" (click)="logout()">log out</button>
+<p>{{message}}</p>

@@ -4,21 +4,25 @@ import { RouterModule, Routes }       from '@angular/router';
 
 /* components */
 import { AppComponent }               from './app.component';
-import { GameBrowserComponent } from './game-browser/game-browser.component';
+import { GameBrowserComponent }       from './game-browser/game-browser.component';
 import { ChatComponent }              from './chat/chat.component';
 import { MndlGaemComponent }          from './game/mndl-gaem/mndl-gaem.component';
+import { LoginComponent }             from './login/login.component'
 
-import { RoomListComponent }          from './chat/room-list.component';
+/* guards */
+import { LoginGuard } from './login/login.guard';
 
 /* services */
-import { SocketService, NamespaceRoomListService, SessionInfoService } from './shared';
+import { SocketService, SessionInfoService } from './shared';
 import { ChatService }                from './chat/chat.service';
-import { GameListService }            from './game-browser/game-list.service'
+import { GameListService }            from './game-browser/game-list.service';
+import { LoginService }               from './login/login.service';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/browser', pathMatch: 'full' },
-  { path: 'game', component: MndlGaemComponent },
-  { path: 'browser', component: GameBrowserComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'game', canActivate: [LoginGuard], component: MndlGaemComponent },
+  { path: 'browser', canActivate: [LoginGuard], component: GameBrowserComponent }
 ]
 
 @NgModule({
@@ -26,8 +30,8 @@ const appRoutes: Routes = [
     AppComponent,
     ChatComponent,
     MndlGaemComponent,
-    RoomListComponent,
-    GameBrowserComponent
+    GameBrowserComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +40,7 @@ const appRoutes: Routes = [
       { enableTracing: true }
     )
   ],
-  providers: [SocketService, NamespaceRoomListService, SessionInfoService, ChatService, GameListService],
+  providers: [SocketService, SessionInfoService, ChatService, GameListService, LoginService, LoginGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
