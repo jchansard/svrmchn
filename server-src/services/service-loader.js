@@ -1,7 +1,10 @@
 let serviceLoader = null;
 const RoomListService = require('./room-list.service').RoomListService;
+const SocketUserService = require('./socket-user.service').SocketUserService;
+
 const availableServices = {
-  roomList: "room-list"
+  roomList: "room-list",
+  socketUsers: "socket-users"
 }
 
 function ServiceLoader() {
@@ -10,6 +13,7 @@ function ServiceLoader() {
   }
   this._constructors = {};
   this._constructors[availableServices.roomList] = RoomListService;
+  this._constructors[availableServices.socketUsers] = SocketUserService;
   this._services = {};
 
   serviceLoader = this;

@@ -12,23 +12,22 @@ module.exports = function(app, server) {
   });
 
   // set up namespaces
-  let userID = ["glasg0wn3d", "OXBOW", "online_playing", "LEFT4SCRAPS"][Math.floor(Math.random()*4)]; //todo: obviously
-  createNamespace(app, io, "login", [loginPlugin])
-  createNamespace(app, io, "chat", [messageEmitterPlugin, roomsPlugin], userID);
-  createNamespace(app, io, "game-browser", [roomsPlugin], userID);
+  createNamespace(app, io, "login", [loginPlugin]);
+  createNamespace(app, io, "chat", [messageEmitterPlugin, roomsPlugin]);
+  createNamespace(app, io, "game-browser", [roomsPlugin]);
 };
 
-function createNamespace(app, io, name /*string*/, plugins /* Plugin[] */, userID /*todo:remove*/) {
+function createNamespace(app, io, name /*string*/, plugins /* Plugin[] */) {
   let namespace = io.of(name);
   namespace.on('connection', (socket) => {
-    console.log(`${userID} connected to ${name} namespace`);
+    console.log(`${socket.id} connected to ${name} namespace`);
     plugins.forEach((pluginFunction) => {
-      pluginFunction(app, namespace, socket, userID);
+      pluginFunction(app, namespace, socket);
     });
   });
 
   namespace.on('disconnect', () => {
-    console.log(`${userID} disconnected from ${name} namespace`);
+    console.log(`${socket.id} disconnected from ${name} namespace`);
   })
 
 }

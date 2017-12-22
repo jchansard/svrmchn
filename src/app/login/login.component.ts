@@ -19,13 +19,18 @@ export class LoginComponent implements OnInit {
 
   login(user:string):void {
     this.message = "logging in..."
-    this.loginService.login(user).subscribe((loggedIn) => {
-      if (isLoggedIn) { // TODO: use do observable?
-        this.message = `logged in as ${user}`;
-        let redirectUrl = this.loginService.redirectUrl ? this.loginService.redirectUrl : '/browser';
-        this.router.navigate([redirectUrl]);
+    this.loginService.login(user).subscribe(
+      data => {
+        if (this.loginService.isLoggedIn) { // TODO: use do observable?
+          this.message = `logged in as ${user}`;
+          let redirectUrl = this.loginService.redirectUrl ? this.loginService.redirectUrl : '/browser';
+          this.router.navigate([redirectUrl]);
+        }
+      },
+      err => {
+        this.message = "this user is already logged in. select a different user." // TODO: obvious
       }
-    })
+    );
   }
 
   logout():void {

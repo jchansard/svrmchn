@@ -3,7 +3,7 @@ import { Observable }     from 'rxjs/Observable';
 import { Subject }        from 'rxjs/Subject';
 import 'rxjs/add/operator/map';
 
-import { SocketService, Socket } from '../shared';
+import { SocketService, Socket, SessionInfoService } from '../shared';
 import { ChatEvents }     from '../common/events/chat.events';
 import { RoomListEvents}  from '../common/events/room-list.events';
 import { IRoomInfo }      from '../common/json/json.IRoomInfo';
@@ -31,7 +31,7 @@ export class ChatService {
   //  return this.rooms.roomListUpdate$;
 }*/
 
-  constructor(private socketService:SocketService) {
+  constructor(private socketService:SocketService, private session:SessionInfoService) {
     this.init();
   }
 
@@ -39,12 +39,10 @@ export class ChatService {
     // todo: handle if this.currentroom is null
     let message:IChatMessage = {
       text: text,
-      sender: "You", // todo: :|
+      sender: this.session.userName,
       room: this.currentRoom.id
     }
-    // todo: fix sender/username
     this.socket.emit(this.chatEvents.sendMessage, message);
-    // todo: update to use username
     this.sentOrReceivedMessage$.next(message);
   }
 

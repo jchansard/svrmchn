@@ -17,6 +17,8 @@ const app = express();
 app.use(express.static(path.join(__dirname, root)));
 
 // route apis
+app.use(require('body-parser').json());
+app.use('/api/authenticate', require('./routes/api/authenticate'));
 
 // redirect to index for other routes
 app.get('*', (req, res) => {

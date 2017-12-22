@@ -3,9 +3,10 @@ const availableServices = require('../services/service-loader').availableService
 const MessageEmitter = require('./message-emitter').MessageEmitter;
 
 // sets up the passed socket to respond to room requests
-module.exports = (app, namespace, socket, userID) => {
-
+module.exports = (app, namespace, socket) => {
+  
   let roomService = app.get('services').load(availableServices.roomList);
+  let socketUsers = app.get('services').load(availableServices.socketUsers);
   let messageEmitter = new MessageEmitter(socket);
 
   socket.on(events.createRoom, () => {
@@ -29,6 +30,7 @@ module.exports = (app, namespace, socket, userID) => {
   // join room event
   // todo: figure out how i want to modularize
   socket.on(events.joinRoom, (room) => {
+    let userID = socketUsers.get(socket.id);
     console.log(`${userID} joining room ${room} [socketID: ${socket.id}]`);
     socket.join(room);
     namespace.to(socket.id).emit(events.roomChange, {id: room});
@@ -40,6 +42,7 @@ module.exports = (app, namespace, socket, userID) => {
   });
 
   socket.on(events.leaveRoom, (room) => {
+    let userID = socketUsers.get(socket.id);
     console.log(`${userID} leaving room ${room}`);
     socket.leave(room);
     messageEmitter.broadcastToRoom({
