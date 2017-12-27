@@ -8,6 +8,8 @@ import { ChatEvents }     from '../common/events/chat.events';
 import { RoomListEvents}  from '../common/events/room-list.events';
 import { IRoomInfo }      from '../common/json/json.IRoomInfo';
 import { IChatMessage }   from '../common/json/json.IChatMessage';
+import { MessageParser }  from './message-parser';
+import { commandType, ChatCommand } from './chat-command';
 
 const ROOMLIST_KEY = "chat";
 const NAMESPACE = "chat";
@@ -22,6 +24,7 @@ export class ChatService {
   private roomEvents:RoomListEvents = new RoomListEvents();
   private messages:IChatMessage[] = [];
   private socket:Socket;
+  private messageParser:MessageParser;
 
 
   private receivedMessage$:Observable<IChatMessage>;
@@ -36,14 +39,18 @@ export class ChatService {
   }
 
   public sendMessage(text:string):void {
-    // todo: handle if this.currentroom is null
-    let message:IChatMessage = {
-      text: text,
-      sender: this.session.userName,
-      room: this.currentRoom.id
+    let command = this.messageParser.parseMessage(text);
+    if (command.command === commandType.chat) {
+      // todo: modularize
+      // todo: handle if this.currentroom is null
+      let message:IChatMessage = {
+        text: command.text,
+        sender: this.session.userName,
+        room: this.currentRoom.id
+      }
+      this.socket.emit(this.chatEvents.sendMessage, message);
+      this.sentOrReceivedMessage$.next(message);
     }
-    this.socket.emit(this.chatEvents.sendMessage, message);
-    this.sentOrReceivedMessage$.next(message);
   }
 
   public getRooms() {
@@ -59,6 +66,7 @@ export class ChatService {
     console.log("initialized chat service");
 
     this.socket = this.socketService.of(NAMESPACE);
+    this.messageParser = new MessageParser();
     this.initRoomListEvents();
     this.initChatEvents();
     this.joinRoom('global');
