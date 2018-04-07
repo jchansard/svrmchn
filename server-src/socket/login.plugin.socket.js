@@ -3,13 +3,14 @@ const availableServices = require('../services/service-loader').availableService
 
 module.exports = (app, namespace, socket) => {
 
-  let socketUsers = app.get('services').load(availableServices.socketUsers);
+  let users = app.get('services').load(availableServices.userList);
 
   socket.on(events.login, (userName) => {
-    socketUsers.add(socket.id, userName);
+    // TODO: use a user object
+    users.connect(socket.id, {userName: userName});
   });
 
   socket.on(events.logout, (userName) => {
-    socketUsers.remove(socket.id);
+    users.disconnect(socket.id);
   })
 }

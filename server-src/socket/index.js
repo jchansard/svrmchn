@@ -21,9 +21,7 @@ function createNamespace(app, io, name /*string*/, plugins /* Plugin[] */) {
   let namespace = io.of(name);
   namespace.on('connection', (socket) => {
     console.log(`${socket.id} connected to ${name} namespace`);
-    plugins.forEach((pluginFunction) => {
-      pluginFunction(app, namespace, socket);
-    });
+    plugins.forEach((pluginFunction) => pluginFunction(app, namespace, socket));
   });
 
   namespace.on('disconnect', () => {

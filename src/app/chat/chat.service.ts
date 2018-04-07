@@ -19,6 +19,7 @@ export class ChatService {
   //public rooms:NamespaceRoomList;
   public allMessages$:Observable<IChatMessage[]>;
   public currentRoom:IRoomInfo;
+  private whisperRoom:IRoomInfo;
 
   private chatEvents:ChatEvents = new ChatEvents();
   private roomEvents:RoomListEvents = new RoomListEvents();
@@ -40,16 +41,23 @@ export class ChatService {
 
   public sendMessage(text:string):void {
     let command = this.messageParser.parseMessage(text);
-    if (command.command === commandType.chat) {
-      // todo: modularize
-      // todo: handle if this.currentroom is null
-      let message:IChatMessage = {
-        text: command.text,
-        sender: this.session.userName,
-        room: this.currentRoom.id
-      }
-      this.socket.emit(this.chatEvents.sendMessage, message);
-      this.sentOrReceivedMessage$.next(message);
+    switch (command.command) {
+      case commandType.chat:
+        this.sendChatMessage(command.text);
+        break;
+      case commandType.whisper:
+        this.sendWhisper(command.object, command.text);
+        break;
+      case commandType.join:
+        this.joinRoom(command.object);
+        break;
+      case commandType.invalid:
+        this.sentOrReceivedMessage$.next({
+          text: "Invalid command",
+          room: "System",
+          sender: "Error",
+        });
+        break;
     }
   }
 
@@ -58,8 +66,8 @@ export class ChatService {
   }
 
   public joinRoom(roomName:string):void {
-    let room:IRoomInfo = { id: roomName };
-    this.socket.emit(this.roomEvents.joinRoom, room.id); // todo: use roomInfo on server
+    let room:IRoomInfo = this.createRoom(roomName);
+    this.socket.emit(this.roomEvents.joinRoom, room); 
   }
 
   private init() {
@@ -69,6 +77,7 @@ export class ChatService {
     this.messageParser = new MessageParser();
     this.initRoomListEvents();
     this.initChatEvents();
+    this.initWhisper();
     this.joinRoom('global');
   }
 
@@ -85,5 +94,46 @@ export class ChatService {
       this.messages.push(message);
       return this.messages;
     });
+  }
+
+  private initWhisper():void {
+    this.whisperRoom = this.getWhisperRoom(this.session.userName);
+    this.socket.emit(this.roomEvents.joinRoom, this.whisperRoom);
+  }
+
+  private sendChatMessage(text:string):void {
+    let message:IChatMessage = {
+      text: text,
+      sender: this.session.userName,
+      room: this.currentRoom.id
+    }
+    this.emitMessage(message);
+  }
+
+  private sendWhisper(toUser:string, text:string):void {
+    let message:IChatMessage = {
+      text: text,
+      sender: this.session.userName,
+      room: this.getWhisperRoom(toUser).id
+    }
+    this.emitMessage(message);
+  }
+
+  private emitMessage(message:IChatMessage):void {
+    this.socket.emit(this.chatEvents.sendMessage, message);
+    this.sentOrReceivedMessage$.next(message);
+  }
+
+  private createRoom(roomName:string):IRoomInfo {
+    return {
+      id: roomName
+    };
+  }
+
+  private getWhisperRoom(userName:string):IRoomInfo {
+    return {
+      id: userName,
+      isWhisper: true
+    };
   }
 }
