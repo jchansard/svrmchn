@@ -1,5 +1,7 @@
+const logger = require('../logger')("User-Service");
 const Observable = require('rxjs/Observable').Observable;
 require("rxjs/add/observable/of");
+
 
 function UserListService() {
   this._sockets = new Map();
@@ -11,7 +13,7 @@ UserListService.prototype = {
 
   connect(socketID, user) {
     if (!user.userName) {
-      console.log("userList: invalid user passed to connectSocket");
+      logger.error("userList: invalid user passed to connectSocket");
       return;
     }
     this._addSocket(socketID, user);
@@ -65,7 +67,6 @@ UserListService.prototype = {
 
   _addSocket(socketID, user) {
     socketID = this._getTrueSocketID(socketID);
-    console.debug("addSocket: " + user.userName);
     this._sockets.set(socketID, user.userName);
   },
 

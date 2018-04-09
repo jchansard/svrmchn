@@ -1,14 +1,15 @@
 const loginPlugin = require('./login.plugin.socket');
 const messageEmitterPlugin = require('./message-emitter.plugin.socket');
 const roomsPlugin = require('./rooms.plugin.socket');
+const logger = require('../logger')("Socket");
 
 module.exports = function(app, server) {
   let io = require('socket.io').listen(server);
   app.set('io', io);
   io.on('connection', (socket) => {
     // connect and disconnect
-    console.log(`a user connected`);
-    socket.on('disconnect', () => console.log(`a user disconnected`));
+    logger.info(`A user connected`);
+    socket.on('disconnect', () => logger.info(`A user disconnected`));
   });
 
   // set up namespaces
@@ -20,12 +21,12 @@ module.exports = function(app, server) {
 function createNamespace(app, io, name /*string*/, plugins /* Plugin[] */) {
   let namespace = io.of(name);
   namespace.on('connection', (socket) => {
-    console.log(`${socket.id} connected to ${name} namespace`);
+    logger.debug(`${socket.id} connected to namespace: ${name}`);
     plugins.forEach((pluginFunction) => pluginFunction(app, namespace, socket));
   });
 
   namespace.on('disconnect', () => {
-    console.log(`${socket.id} disconnected from ${name} namespace`);
+    logger.debug(`${socket.id} disconnected from namespace: ${name}`);
   })
 
 }

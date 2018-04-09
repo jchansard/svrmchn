@@ -1,7 +1,8 @@
 const events = new require('../common/events/room-list.events').RoomListEvents();
 const availableServices = require('../services/service-loader').availableServices;
 const MessageEmitter = require('./message-emitter').MessageEmitter;
-const log = require('../debug');
+const logger = new require('../logger')("Rooms Plugin");
+//const source = "Rooms-Plugin";
 
 // sets up the passed socket to respond to room requests
 module.exports = (app, namespace, socket) => {
@@ -16,7 +17,7 @@ module.exports = (app, namespace, socket) => {
     if (!roomExists(roomService.rooms, roomName)) { // TODO: what is this
 
       roomService.createRoom(roomName).subscribe((room) => {
-        console.log("creating new room: " + roomName);
+        logger.debug(`createRoom: Creating new room: ${roomName}`);
         namespace.to(socket.id).emit(events.roomListUpdate, roomService.rooms);
         // join room also
         socket.join(room.id);
@@ -36,7 +37,7 @@ module.exports = (app, namespace, socket) => {
     //console.dir(room);
     //let roomID = room.id; //roomService.getRoomID(room);
 //    room.id = (room.isWhisper) ? `w/${room.id}` : `p/${room.id}`
-    log.debug(`${userID} joining room.`, { room: room, socketID: socket.id });
+    logger.debug(`joinRoom: ${userID} joining room ${room}`);
     if (!roomService.roomExists(room)) {
       roomService.createRoom(room);
     }
@@ -51,7 +52,7 @@ module.exports = (app, namespace, socket) => {
 
   socket.on(events.leaveRoom, (room) => {
     let userID = userService.getUserNameFromSocket(socket.id);
-    console.log(`${userID} leaving room ${room}`);
+    debug.log(source, `leaveRoom: ${userID} leaving room ${room}`);
     socket.leave(room);
     messageEmitter.broadcastToRoom({
       text: `${userID} left the room`,

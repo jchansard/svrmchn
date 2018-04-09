@@ -1,5 +1,6 @@
 const events = new require('../common/events/login.events').LoginEvents();
 const availableServices = require('../services/service-loader').availableServices;
+const logger = require('../logger')("Login Plugin");
 
 module.exports = (app, namespace, socket) => {
 

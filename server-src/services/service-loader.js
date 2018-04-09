@@ -2,6 +2,7 @@ let serviceLoader = null;
 const RoomListService = require('./room-list.service').RoomListService;
 const SocketUserService = require('./socket-user.service').SocketUserService;
 const UserListService = require('./user-list.service').UserListService;
+const logger = require('../logger')("Service Loader");
 
 const availableServices = {
   roomList: "room-list",
@@ -25,7 +26,7 @@ function ServiceLoader() {
 ServiceLoader.prototype = {
   load(serviceName) {
     if (!(serviceName in this._constructors)) {
-      console.log(`invalid service requested: ${serviceName}`);
+      logger.error(`Invalid service requested: ${serviceName}`);
       return null;
     }
     else {
@@ -43,7 +44,7 @@ ServiceLoader.prototype = {
   },
 
   _loadNewService(serviceName) {
-    console.log(`loaded new service: ${serviceName}`);
+    logger.debug(`Loaded new service: ${serviceName}`);
     let newService = new this._constructors[serviceName]();
     this._services[serviceName] = newService;
     return newService;
