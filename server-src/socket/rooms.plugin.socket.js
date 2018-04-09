@@ -1,6 +1,7 @@
 const events = new require('../common/events/room-list.events').RoomListEvents();
 const availableServices = require('../services/service-loader').availableServices;
 const MessageEmitter = require('./message-emitter').MessageEmitter;
+const log = require('../debug');
 
 // sets up the passed socket to respond to room requests
 module.exports = (app, namespace, socket) => {
@@ -35,7 +36,7 @@ module.exports = (app, namespace, socket) => {
     //console.dir(room);
     //let roomID = room.id; //roomService.getRoomID(room);
 //    room.id = (room.isWhisper) ? `w/${room.id}` : `p/${room.id}`
-    console.log(`${userID} joining room ${room} [socketID: ${socket.id}]`);
+    log.debug(`${userID} joining room ${room} [socketID: ${socket.id}]`);
     if (!roomService.roomExists(room)) {
       roomService.createRoom(room);
     }
