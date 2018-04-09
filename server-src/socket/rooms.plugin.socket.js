@@ -36,7 +36,7 @@ module.exports = (app, namespace, socket) => {
     //console.dir(room);
     //let roomID = room.id; //roomService.getRoomID(room);
 //    room.id = (room.isWhisper) ? `w/${room.id}` : `p/${room.id}`
-    log.debug(`${userID} joining room ${room} [socketID: ${socket.id}]`);
+    log.debug(`${userID} joining room.`, { room: room, socketID: socket.id });
     if (!roomService.roomExists(room)) {
       roomService.createRoom(room);
     }
