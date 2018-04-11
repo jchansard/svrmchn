@@ -36,12 +36,12 @@ module.exports = (app, namespace, socket) => {
     let userID = userService.getUserNameFromSocket(socket.id);
     //console.dir(room);
     //let roomID = room.id; //roomService.getRoomID(room);
-//    room.id = (room.isWhisper) ? `w/${room.id}` : `p/${room.id}`
-    logger.debug(`joinRoom: ${userID} joining room ${room}`);
+    room.id = (room.isWhisper) ? `w/${room.id}` : `p/${room.id}` // TODO: modularize
     if (!roomService.roomExists(room)) {
       roomService.createRoom(room);
     }
-    socket.join(room);
+    logger.debug(`joinRoom: ${userID} joining room ${room.id}`);
+    socket.join(room.id);
     namespace.to(socket.id).emit(events.roomChange, room);
     messageEmitter.broadcastToRoom({
       text: `${userID} has joined the room`,
@@ -52,8 +52,8 @@ module.exports = (app, namespace, socket) => {
 
   socket.on(events.leaveRoom, (room) => {
     let userID = userService.getUserNameFromSocket(socket.id);
-    debug.log(source, `leaveRoom: ${userID} leaving room ${room}`);
-    socket.leave(room);
+    debug.log(source, `leaveRoom: ${userID} leaving room ${room.id}`);
+    socket.leave(room.id);
     messageEmitter.broadcastToRoom({
       text: `${userID} left the room`,
       room: room,

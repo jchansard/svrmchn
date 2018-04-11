@@ -21,12 +21,10 @@ module.exports = function(app, server) {
 function createNamespace(app, io, name /*string*/, plugins /* Plugin[] */) {
   let namespace = io.of(name);
   namespace.on('connection', (socket) => {
-    logger.debug(`${socket.id} connected to namespace: ${name}`);
     plugins.forEach((pluginFunction) => pluginFunction(app, namespace, socket));
   });
 
   namespace.on('disconnect', () => {
-    logger.debug(`${socket.id} disconnected from namespace: ${name}`);
   })
 
 }

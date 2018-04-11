@@ -8,6 +8,5 @@ export enum commandType {
 
 export interface ChatCommand {
   command: commandType,
-  object?: string,
-  text?: string
+  arguments?: string[]
 }

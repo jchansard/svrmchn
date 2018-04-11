@@ -1,7 +1,7 @@
 <div class="form-group">
   <div class="chat-area">
     <ul class="messages">
-      <li *ngFor="let message of chatService.allMessages$ | async"><span *ngIf=isDifferentRoom(message.room)>({{message.room}}) </span>{{ message.sender }}: {{ message.text }}</li>
+      <li *ngFor="let message of chatService.allMessages$ | async"><span *ngIf=isDifferentRoom(message.room.id)>({{message.room.id}}) </span>{{ message.sender }}: {{ message.text }}</li>
     </ul>
   </div>
   <input #chatInput class="chat-input" placeholder="Type here to chat..." (keyup.enter)="sendChatMessage(chatInput.value); chatInput.value = ''"/>

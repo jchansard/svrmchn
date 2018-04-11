@@ -1,5 +1,6 @@
 const Observable = require('rxjs/Observable').Observable;
 require("rxjs/add/observable/of");
+const logger = require('../logger')("Room Service");
 
 function RoomListService() {
   this._rooms = [];
@@ -10,14 +11,21 @@ RoomListService.prototype = {
     return this._rooms;
   },
 
-  roomExists(roomName) {
-    return (!!this._rooms.find((room) => room.id === roomName));
+  roomExists(room) {
+    let found = (!!this._rooms.find((currRoom) => currRoom.id === room.id));
+    if (!found) {
+      logger.debug(`Room not found: ${room.id}`);
+      return false;
+    }
+    else {
+      return true;
+    }
   },
 
-  createRoom(roomName) {
-    let newRoom = { id: roomName };
-    this._rooms.push(newRoom);
-    return Observable.of(newRoom);
+  createRoom(room) {
+    logger.debug(`Creating room: ${room.id}`)
+    this._rooms.push(room);
+    return Observable.of(room);
   }
 };
 

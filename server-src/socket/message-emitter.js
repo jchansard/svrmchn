@@ -8,12 +8,12 @@ function MessageEmitter(socket, namespace) {
 
 MessageEmitter.prototype = {
   broadcastToRoom(message /*IMessageInfo*/) {
-    logger.debug(`received message sent to room ${message.room}: ${message.text}`);
-    this._socket.broadcast.to(message.room).emit(events.receiveMessage, message);
+    logger.debug(`Received message sent to room ${message.room.id}: ${message.text}`);
+    this._socket.broadcast.to(message.room.id).emit(events.receiveMessage, message);
   },
 
   sendToSocket(socketID, message /*IMessageInfo*/) {
-    logger.debug(`sending message to ${socketID}: ${message.text}`);
+    logger.debug(`Sending message to ${socketID}: ${message.text}`);
     this._namespace.to(socketID).emit(events.receiveMessage, message);
   }
 }

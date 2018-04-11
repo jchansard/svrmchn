@@ -33,7 +33,7 @@ class FormatterBuilder {
     return function(args) {
       let colorizer = new Colorizer();
       let levelWithColor = colorizer.colorizeByLevel(args.level);
-      let sourceWithColor = colorizer.colorize(` (${source}): `, "magenta", "black");
+      let sourceWithColor = colorizer.colorize(` (${source}):`, "magenta", "black");
       let formattedMessage = `${levelWithColor}${sourceWithColor} ${args.message}`;
       if (Object.keys(args.meta).length > 0) { return `${formattedMessage} [${JSON.stringify(args.meta)}]`; }
       else { return formattedMessage; }

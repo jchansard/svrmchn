@@ -1,71 +1,55 @@
 import { ChatCommand, commandType } from './chat-command';
 
+type CommandWithRegex = {
+  command:string,
+  regex: RegExp
+}
+
 export class MessageParser {
 
-  private commandsRequiringObject = [
-    commandType.whisper,
-    commandType.join,
-    commandType.leave
-  ];
-  private validCommands = {
-    "/w": commandType.whisper,
-    "/whisper": commandType.whisper,
-    "/j": commandType.join,
-    "/join": commandType.join
-  }
+  private validCommands:CommandWithRegex[] = [
+    {
+      command: "whisper",
+      regex: /\/w(?:hisper)? (\w+) ([\s\w]*)/
+    },
+    {
+      command: "join",
+      regex: /\/j(?:oin)? (\w+)$/
+    }
+  ]
 
   public parseMessage(message:string):ChatCommand {
-    let allWords:string[],command:ChatCommand,type:commandType,object:string;
-    let invalidCommand = { command: commandType.invalid };
-    allWords = message.split(" ");
-    type = this.extractCommand(allWords.shift());
-    if (type === commandType.invalid) {
-      return invalidCommand;
-    }
-    else if (this.commandRequiresObject(type)) {
-      // if command is required, but there's only one word, it's invalid
-      if (allWords.length < 2) {
-        return invalidCommand;
-      }
-      else {
-        return {
-          command: type,
-          object: allWords.shift(),
-          text: allWords.join()
-        };
-      }
+    if (this.messageHasCommand(message)) {
+      return this.parseCommand(message);
     }
     else {
       return {
-        command: type,
-        text: allWords.join()
+        command: commandType.chat,
+        arguments: [message]
       }
     }
   }
 
-  private extractCommand(commandWord:string):commandType {
-    console.log(commandWord);
-    console.log(this.validCommands[commandWord] || commandType.invalid);
-    if (commandWord[0] !== "/") return commandType.chat;
-    else {
-      console.log("here i am");
-      return this.validCommands[commandWord] || commandType.invalid;
-    }
-    // if (text[0] !== "/") return null;
-    // let command:commandType, commandWord:string;
-    // commandWord = text.substring(1);
-    //
-    // let foundCommand = commandTypes.find((type) => {
-    //   let firstLetter = type[0];
-    //   let rest = type.slice(1);
-    //   let regex = new RegExp(`${firstLetter}(${rest})`);
-    //   return (!!commandWord.match(regex));
-    // })
-    // if (foundCommand) return commandType[foundCommand];
-    // else return null;
+  private messageHasCommand(message:string):boolean {
+    return message.startsWith("/");
   }
 
-  private commandRequiresObject(command:commandType) {
-    return this.commandsRequiringObject.includes(command);
+  private parseCommand(message:string):ChatCommand {
+    for (let index = 0; index < this.validCommands.length; index++) {
+      let command = this.validCommands[index];
+      let regex:RegExp = command.regex;
+      let matches = message.match(regex);
+      if (matches !== null) {
+        return {
+          command: commandType[command.command],
+          arguments: matches.slice(1)
+        }
+      }
+    }
+
+    // no valid commands found
+    return {
+      command: commandType.invalid
+    }
   }
 }

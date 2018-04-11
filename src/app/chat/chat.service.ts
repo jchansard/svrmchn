@@ -43,18 +43,18 @@ export class ChatService {
     let command = this.messageParser.parseMessage(text);
     switch (command.command) {
       case commandType.chat:
-        this.sendChatMessage(command.text);
+        this.sendChatMessage(command.arguments[0]);
         break;
       case commandType.whisper:
-        this.sendWhisper(command.object, command.text);
+        this.sendWhisper(command.arguments[0], command.arguments[1]);
         break;
       case commandType.join:
-        this.joinRoom(command.object);
+        this.joinRoom(command.arguments[0]);
         break;
       case commandType.invalid:
         this.sentOrReceivedMessage$.next({
           text: "Invalid command",
-          room: "System",
+          room: { id: "System" }, //TODO: duh
           sender: "Error",
         });
         break;
@@ -67,7 +67,7 @@ export class ChatService {
 
   public joinRoom(roomName:string):void {
     let room:IRoomInfo = this.createRoom(roomName);
-    this.socket.emit(this.roomEvents.joinRoom, room); 
+    this.socket.emit(this.roomEvents.joinRoom, room);
   }
 
   private init() {
@@ -105,7 +105,7 @@ export class ChatService {
     let message:IChatMessage = {
       text: text,
       sender: this.session.userName,
-      room: this.currentRoom.id
+      room: this.currentRoom
     }
     this.emitMessage(message);
   }
@@ -114,7 +114,7 @@ export class ChatService {
     let message:IChatMessage = {
       text: text,
       sender: this.session.userName,
-      room: this.getWhisperRoom(toUser).id
+      room: this.getWhisperRoom(toUser)
     }
     this.emitMessage(message);
   }
